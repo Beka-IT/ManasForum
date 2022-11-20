@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using Grpc.Net.Client;
 
 namespace MVC.Controllers
 {
@@ -10,11 +12,17 @@ namespace MVC.Controllers
 
         public HomeController(ILogger<HomeController> logger)
         {
-            _logger = logger;
+            
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            using var channel = GrpcChannel.ForAddress("http://localhost:5001");
+            var client = new Greeter.GreeterClient(channel);
+            var reply = await client.SayHelloAsync(
+                new HelloRequest { Name = "GreeterClient" });
+            Console.WriteLine("Greeting: " + reply.Message);
+            
             return View();
         }
 
@@ -23,10 +31,5 @@ namespace MVC.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }
