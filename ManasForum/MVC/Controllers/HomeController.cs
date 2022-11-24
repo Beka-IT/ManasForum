@@ -15,21 +15,5 @@ namespace MVC.Controllers
             
         }
 
-        public async Task<IActionResult> Index()
-        {
-            using var channel = GrpcChannel.ForAddress("http://localhost:5001");
-            var client = new Greeter.GreeterClient(channel);
-            var reply = await client.SayHelloAsync(
-                new HelloRequest { Name = "GreeterClient" });
-            Console.WriteLine("Greeting: " + reply.Message);
-            
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
     }
 }
