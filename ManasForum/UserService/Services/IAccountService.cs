@@ -4,7 +4,7 @@ namespace UserService.Services;
 
 public interface IAccountService
 {
-    Account Login(Account account);
+    Task<Account> LoginAsync(string login, string password);
 
-    Account SignUp(Account account);
+    Task<AccountSignUpResponse> SignUpAsync(Account account);
 }
