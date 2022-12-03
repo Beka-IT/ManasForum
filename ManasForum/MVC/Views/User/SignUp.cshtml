@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manas Forum</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="css/login.css">
 </head>
-<body>
-    <div class="img-bg">
+<body style="background: url('img/Manas_logo.png') no-repeat center;">
+    <div>
         <div class="w-50 position-absolute top-50 start-50 translate-middle rounded p-2" style="background-color: rgba(190, 212, 210, 0.6);">
             <form action="">
                 <h3 class="text-center">Manas Forum</h3>
@@ -17,7 +17,19 @@
                 <div class="form-floating-sm mb-3">
                     <input type="email" class="form-control" id="floatingInput" placeholder="1904.00000@manas.edu.kg">
                 </div>
-                <button type="submit" class="btn btn-primary float-end">Next</button>
+                <div class="form-floating-sm mb-3">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="ФИО">
+                </div>
+                <div class="form-floating-sm mb-3">
+                    <input type="password" class="form-control" id="floatingInput" placeholder="Пароль">
+                </div>
+                <div class="form-floating-sm mb-3">
+                    <input type="password" class="form-control" id="floatingInput" placeholder="Пароль еще раз">
+                </div>
+                
+                <div>
+                    <button type="submit" class="btn btn-primary float-end">Отправить</button>
+                </div>
                 <p>Уже есть аккаунт?  <a href="login.html">Вход</a></p>
             </form>
         </div>
