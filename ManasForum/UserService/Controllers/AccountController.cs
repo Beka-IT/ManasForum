@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MVC.Models;
 using UserService.Models;
 using UserService.Services;
 
@@ -16,27 +17,22 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("Login")]
-    public async Task<IActionResult> Login(string login, string password)
+    public async Task<IActionResult> Login(AccountDto accountDto)
     {
-        if (login == null || password == null)
-        {
-            return BadRequest("Введите логин и пароль!");
-        }
-        
-        var user = await _accountService.LoginAsync(login, password);
+        var user = await _accountService.LoginAsync(accountDto.Login, accountDto.Password);
 
         if (user == null)
         {
-            return Unauthorized("Неправильный логин или пароль!");
+            return Unauthorized();
         }
 
         return Ok();
     }
 
     [HttpPost("SignUp")]
-    public async Task<AccountSignUpResponse> SignUp(Account account)
+    public async Task<AccountSignUpResponse> SignUp(AccountSignUpDto account)
     {
-        var userResponse = await _accountService.SignUpAsync(account);
+        AccountSignUpResponse userResponse = await _accountService.SignUpAsync(account);
 
         return userResponse;
     }

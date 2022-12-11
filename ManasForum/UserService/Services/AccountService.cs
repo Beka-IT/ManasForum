@@ -26,7 +26,7 @@ public class AccountService : IAccountService
         return user;
     }
 
-    public async Task<AccountSignUpResponse> SignUpAsync(Account account)
+    public async Task<AccountSignUpResponse> SignUpAsync(AccountSignUpDto account)
     {
         Regex regex = new Regex(@"^([\w\.\-]+)@manas.edu.kg");
         
@@ -61,15 +61,21 @@ public class AccountService : IAccountService
             };
         }
 
-        account.Password = BCrypt.Net.BCrypt.HashPassword(account.Password);
-        await _db.Accounts.AddAsync(account);
+        var newAccount = new Account()
+            {
+                Login = account.Login,
+                Fullname = account.Fullname
+            };
+        
+        newAccount.Password = BCrypt.Net.BCrypt.HashPassword(account.Password);
+        await _db.Accounts.AddAsync(newAccount);
         await _db.SaveChangesAsync();
 
-        account = await _db.Accounts.FirstOrDefaultAsync(a => a.Login == account.Login);
+        newAccount = await _db.Accounts.FirstOrDefaultAsync(a => a.Login == account.Login);
 
         return new AccountSignUpResponse()
         {
-            Account = account,
+            Account = newAccount,
             message = "Вы успешно зарегистрировались!"
         };
     }

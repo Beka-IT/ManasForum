@@ -31,4 +31,8 @@
     <None Include="wwwroot\css\login.css" />
     <None Include="wwwroot\img\Manas_logo.png" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models" />
+  </ItemGroup>
 </Project>

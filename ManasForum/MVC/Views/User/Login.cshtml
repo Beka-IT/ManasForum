@@ -1,3 +1,8 @@
+@model AccountDto
+@{
+    
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,18 +16,20 @@
 <body style="background: url('img/Manas_logo.png') no-repeat center;">
     <div>
         <div class="w-50 position-absolute top-50 start-50 translate-middle rounded p-2" style="background-color: rgba(69, 76, 86, 0.6);">
-            <form method="post">
-                <h3 class="text-center">Manas Forum</h3>
-                <h5 class="text-center">Вход</h5>
-                <div class="form-floating-sm mb-3">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="1904.00000@manas.edu.kg">
-                </div>
-                <div class="form-floating-sm mb-3">
-                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                </div>
-                <button type="submit" class="btn btn-primary float-end">Login</button>
-                <p>Нет аккаунта?  <a href="signup.html">Регистрация</a></p>
-            </form>
+                @using (Html.BeginForm("LoginPost", "User", FormMethod.Post))
+                {
+                    <h3 class="text-center">Manas Forum</h3>
+                    <h5 class="text-center">Вход</h5>
+                    <h6 class="text-danger">@TempData["LoginError"]</h6>
+                    <div class="form-floating-sm mb-3">
+                         @Html.TextBoxFor(m => m.Login, new {placeholder = "Email", @class = "form-control" })
+                    </div>
+                    <div class="form-floating-sm mb-3">
+                        @Html.PasswordFor(m => m.Password, new {placeholder = "Пароль", @class = "form-control" })
+                    </div>
+                    <button type="submit" class="btn btn-primary float-end">Login</button>
+                    <p>Нет аккаунта?  <a asp-action="SignUp">Регистрация</a></p>
+                }
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

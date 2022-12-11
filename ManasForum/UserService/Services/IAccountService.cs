@@ -6,5 +6,5 @@ public interface IAccountService
 {
     Task<Account> LoginAsync(string login, string password);
 
-    Task<AccountSignUpResponse> SignUpAsync(Account account);
+    Task<AccountSignUpResponse> SignUpAsync(AccountSignUpDto account);
 }

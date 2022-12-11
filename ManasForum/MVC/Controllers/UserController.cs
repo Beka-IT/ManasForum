@@ -1,13 +1,17 @@
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
+using MVC.Models;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using UserService.Models;
+using MediaTypeHeaderValue = Microsoft.Net.Http.Headers.MediaTypeHeaderValue;
 
 namespace MVC.Controllers
 {
     public class UserController : Controller
     {
-        string Baseurl = "https://localhost:7197";
+
+        private const string _baseAddress = "https://localhost:7197/Account/";
         public UserController()
         {
             
@@ -24,33 +28,64 @@ namespace MVC.Controllers
         {
             return View();
         }
-        /*
-        [HttpGet]
-        public async Task<ActionResult> Index()
+
+        [HttpPost("SignUpPost")]
+        public async Task<IActionResult> SignUpPost(AccountSignUpDto newAccount)
         {
-            var account = new Account();
             using (var client = new HttpClient())
-            {
-                //Passing service base url
-                client.BaseAddress = new Uri(Baseurl);
-                client.DefaultRequestHeaders.Clear();
-                //Define request data format
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                //Sending request to find web api REST service resource GetAllEmployees using HttpClient
-                HttpResponseMessage Res = await client.PostAsJsonAsync<Account>(account,"/Account/Login");
-                //Checking the response is successful or not which is sent using HttpClient
-                if (Res.IsSuccessStatusCode)
-                {
-                    //Storing the response details recieved from web api
-                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
-                    //Deserializing the response recieved from web api and storing into the Employee list
-                    EmpInfo = JsonConvert.DeserializeObject<List<Employee>>(EmpResponse);
-                }
-                //returning the employee list to view
-                return View(EmpInfo);
+            { 
+                string actionName = "SignUp";
                 
+                client.BaseAddress = new Uri(_baseAddress + actionName);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = client.PostAsJsonAsync(actionName, newAccount).Result;
+                Console.WriteLine(response);
+                if (response.IsSuccessStatusCode)
+                {
+                    var accountSignUpResponse = await response.Content.ReadAsAsync<AccountSignUpResponse>();
+
+                    if (accountSignUpResponse.Account != null)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    
+                    TempData["SignUpError"] = accountSignUpResponse.message;
+                }
+                
+                return RedirectToAction("SignUp");
             }
-        }*/
-        
+        }
+
+        [HttpPost("LoginPost")]
+        public async Task<ActionResult> LoginPost(AccountDto account)
+        {
+            if (account.Login == null || account.Password == null)
+            {
+                TempData["LoginError"] = "Введите логин и пароль!";
+                
+                return RedirectToAction("Login");
+            }
+            
+            using (var client = new HttpClient())
+            { 
+                string actionName = "Login";
+                
+                client.BaseAddress = new Uri(_baseAddress + actionName);
+
+                //HTTP POST
+                HttpResponseMessage result = client.PostAsJsonAsync(actionName, account).Result;
+
+                if (result.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                
+                TempData["LoginError"] = "Неправильный логин или пароль!";
+                
+                return RedirectToAction("Login");
+            }
+        }
     }
 }
