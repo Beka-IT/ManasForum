@@ -29,12 +29,12 @@
 
         <div class="d-flex align-items-end flex-row-reverse">
             <a class="btn btn-outline-warning m-1" role="button" asp-controller="User" asp-action="LogOut">Log out</a>
-            <a class="btn btn-outline-success m-1 fw-bold" href="#" role="button">Ask a quetion</a>
+            <a class="btn btn-outline-success m-1 fw-bold" onclick="ToggleForm()" role="button">Ask a question</a>
         </div>
 
     </nav>
 
-    <nav class="float-start nav align-items-center flex-column bg-dark bg-gradient me-1" style="width: 15%; height: 100vh;">
+    <nav class="float-start nav align-items-center flex-column bg-dark bg-gradient me-1" style="width: 15%; height: 2000px;">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">Main Page</a>
         </li>
@@ -48,7 +48,22 @@
           <a class="nav-link" href="#">My Profile</a>
         </li>
     </nav>
+
+    <div id="QuestionForm" style="display: none">
+    <div class="d-flex flex-column justify-content-around" >
+        <div class="m-3 w-75">
+            <label for="QuestionTitle" class="form-label">Question Title:</label>
+            <textarea class="form-control" rows="2" id="QuestionTitle"></textarea>
+        </div>
     
+        <div class="m-3 w-75">
+            <label for="QuestionDescription" class="form-label">Question Description:</label>
+            <textarea class="form-control" rows="10" id="QuestionDescription"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary w-25 m-3">Post it</button>
+        <hr>
+    </div>
+    </div>  
 @foreach (var item in Model)
 {
     <div class="card m-2 px-3 border border-dark">
@@ -81,6 +96,14 @@
             
             loadPopularQuestions()
         })
+       function ToggleForm(){
+            var x = document.getElementById("QuestionForm");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
     </script>
 </body>
 </html>

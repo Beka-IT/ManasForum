@@ -39,7 +39,7 @@ namespace MVC.Controllers
                 if (result.IsSuccessStatusCode)
                 {
                     var questions = await result.Content.ReadAsAsync<IEnumerable<PopularQuestionsViewModel>>();
-                    Console.WriteLine(questions.Count());
+                    
                     return View(questions);
                 }
                 

@@ -24,7 +24,7 @@ public class QuestionController : ControllerBase
         var result = new List<PopularQuestionsViewModel>();
         var questions =  _context.Questions
             .OrderByDescending(q => q.Views)
-            .Take(10);
+            .Take(6);
 
         foreach (var question in questions)
         {
