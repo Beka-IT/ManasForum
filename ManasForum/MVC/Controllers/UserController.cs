@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using System.Security.Principal;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
 using Newtonsoft.Json;
@@ -89,6 +90,14 @@ namespace MVC.Controllers
                 
                 return RedirectToAction("Login");
             }
+        }
+
+        [HttpGet("LogOut")]
+        public IActionResult LogOut()
+        {
+            HttpContext.Session.Remove(_configuration.GetSection("UserSessionKey").ToString());
+
+            return RedirectToAction("Login", "User");
         }
     }
 }
