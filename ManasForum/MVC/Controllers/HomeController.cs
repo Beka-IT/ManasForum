@@ -3,6 +3,8 @@ using MVC.Models;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using DiscussionService.Models;
+using DiscussionService.ViewModels;
 using Grpc.Net.Client;
 
 namespace MVC.Controllers
@@ -10,12 +12,14 @@ namespace MVC.Controllers
     public class HomeController : Controller
     {
         private IConfiguration _configuration;
+        private const string BaseAddress = "https://localhost:7176/Question/";
         public HomeController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-
-        public IActionResult Index()
+        
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
             var username = HttpContext.Session.GetString(_configuration.GetSection("UserSessionKey").ToString());
                 
@@ -23,9 +27,24 @@ namespace MVC.Controllers
             {
                 return RedirectToAction("Login", "User");
             }
-            
-            return View();
-        }
+            using (var client = new HttpClient())
+            { 
+                string actionName = $"PopularQuestions";
+                
+                client.BaseAddress = new Uri(BaseAddress + actionName);
 
+                //HTTP POST
+                HttpResponseMessage result = client.GetAsync(actionName).Result;
+
+                if (result.IsSuccessStatusCode)
+                {
+                    var questions = await result.Content.ReadAsAsync<IEnumerable<PopularQuestionsViewModel>>();
+                    Console.WriteLine(questions.Count());
+                    return View(questions);
+                }
+                
+                return View();
+            } 
+        }
     }
 }
