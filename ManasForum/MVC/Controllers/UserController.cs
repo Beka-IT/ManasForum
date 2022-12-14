@@ -12,9 +12,11 @@ namespace MVC.Controllers
     {
 
         private const string _baseAddress = "https://localhost:7197/Account/";
-        public UserController()
+
+        private readonly IConfiguration _configuration;
+        public UserController(IConfiguration configuration)
         {
-            
+            _configuration = configuration;
         }
 
         [HttpGet("Login")]
@@ -79,6 +81,7 @@ namespace MVC.Controllers
 
                 if (result.IsSuccessStatusCode)
                 {
+                    HttpContext.Session.SetString(_configuration.GetSection("UserSessionKey").ToString(), account.Login);
                     return RedirectToAction("Index", "Home");
                 }
                 
