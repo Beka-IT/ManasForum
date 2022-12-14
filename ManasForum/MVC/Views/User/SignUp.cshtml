@@ -18,9 +18,7 @@
             {
                 <h3 class="text-center">Manas Forum</h3>
                 <h5 class="text-center">Регистрация</h5>
-                <h6 class="text-danger">@TempData["SignUpError"]</h6>
-                <h6 class="text-danger" id="validationError"></h6>
-                <div class="validation" asp-validation-summary="All"></div>
+                <h6 class="text-danger" id="validationError">@TempData["SignUpError"]</h6>
                 <div class="form-floating-sm mb-3">
                     @Html.TextBoxFor(m => m.Login, new {placeholder = "Email", id = "login", @class = "form-control" })
                 </div>
@@ -57,14 +55,20 @@
                 if (fullname == ""){
                     $('#validationError').text("Введите ФИО!");
                     return false;
-                }        
-                
+                }
+
                 var password = $("#txtPassword").val();
                 var confirmPassword = $("#txtConfirmPassword").val();
+
+                if (password == "") {
+                    $('#validationError').text("Введите Пароль!");
+                    return false;
+                }
                 if (password != confirmPassword) {
                     $('#validationError').text("Пароли не совпадают!");
                     return false;
                 }
+
                 return true;
             });
         });
