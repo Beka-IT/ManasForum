@@ -1,4 +1,6 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<DiscussionService.ViewModels.PopularQuestionsViewModel>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,74 +64,39 @@
         <hr>
     </div>
     </div>  
-
+@foreach (var item in Model)
+{
     <div class="card m-2 px-3 border border-dark">
         <div class="card-body">
-            <h5 class="card-title">How can I pass the exams?(Example quetion title)</h5>
+            <h5 class="card-title">@item.Question.Title</h5>
             <hr>
-            <p class="card-text">
-                Some additional text or files can be written here 
-                <br>
-                ...
-                <br>
-                ...
-            </p>
+            <p class="card-text">@item.Question.Description</p>
             <hr>
             <div class="flex-raw">
-                <a href="#" class="card-link">Answers <span class="badge bg-info">1</span></a>
-                <a href="#" class="card-link">Comments <span class="badge bg-info">1</span></a>
-                <a href="#" class="card-link">Interesting <span class="badge bg-info">1</span></a>
+                <a href="#" class="card-link">Answers <span class="badge bg-info">@item.AnswersCount</span></a>
+                <a href="#" class="card-link">Views <span class="badge bg-info">@item.Question.Views</span></a>
                 <div class="flex-raw float-end">
-                    <p class="small text-muted">Data of Publish: 5.12.2022 <br>  Author: Kantemir Zhaichibekov</p>
+                    <p class="small text-muted">Data of Publish: @item.Question.PublicationDate <br> Author: @item.AuthorFullname</p>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="card m-2 px-3 border border-dark">
-        <div class="card-body">
-            <h5 class="card-title">How can I pass the exams?(Example quetion title)</h5>
-            <hr>
-            <p class="card-text">
-                Some additional text or files can be written here 
-                <br>
-                ...
-                <br>
-                ...
-            </p>
-            <hr>
-            <div class="flex-raw">
-                <a href="#" class="card-link">Answers <span class="badge bg-info">1</span></a>
-                <a href="#" class="card-link">Comments <span class="badge bg-info">1</span></a>
-                <a href="#" class="card-link">Interesting <span class="badge bg-info">1</span></a>
-                <div class="flex-raw float-end">
-                    <p class="small text-muted">Data of Publish: 5.12.2022 <br> Author: Kantemir Zhaichibekov</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>    
-            </li>
-        </ul>
-    </nav>
+}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script type="text/javascript">
-        function ToggleForm(){
+        $(function (page) {
+            function loadPopularQuestions()
+            {
+                $.ajax({url: `https://localhost:7190/PopularQuestions`, success: function(result){
+                    console.log(result);
+                }});
+            };
+            
+            loadPopularQuestions()
+        })
+       function ToggleForm(){
             var x = document.getElementById("QuestionForm");
             if (x.style.display === "none") {
                 x.style.display = "block";
