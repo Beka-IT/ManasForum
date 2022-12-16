@@ -1,0 +1,144 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body style="background-color: rgb(222, 224, 227);">
+    <nav class="nav bg-dark bg-gradient sticky-top">
+        <div class="p-2 mx-3">
+            <h1 class="text-info text-end">ManasForum</h1>
+        </div>
+        
+        <div class="d-flex align-items-end w-50 mx-auto" >
+            <div class="input-group m-1 mx-5 w-100">
+                <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" id="button-addon2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-end flex-row-reverse">
+            <a class="btn btn-outline-warning m-1" role="button" asp-controller="User" asp-action="LogOut">Log out</a>
+            <a class="btn btn-outline-success m-1 fw-bold" onclick="ToggleForm()" role="button">Ask a Answer</a>
+        </div>
+
+    </nav>
+
+    <nav class="float-start nav align-items-center flex-column bg-dark bg-gradient" style="width: 15%; height: 2000px;">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Main Page</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Members</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Notifications <span class="badge bg-info">1</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">My Profile</a>
+        </li>
+    </nav>
+
+    <div class="float-start border border-dark bg-white rounded w-75" style="height: auto; margin: 10px 50px; padding: 10px;">
+        <h3>
+            Question Title
+        </h3>
+        <hr style="color: blue;">
+        <p>Question Description
+            <br>
+            ...
+            <br>
+            ...
+            <br>
+            ...
+            <br>
+            ...
+        </p>
+        <hr>
+        <div class="d-flex flex-row justify-content-between">
+            <button class="btn btn-success mx-5" style="width: 200px;" onclick="ToggleForm()">Answer</button>
+            <div class="d-flex flex-row justify-content-between">
+                <p class="small text-muted mx-5">Views: 0</p>
+                <p class="small text-muted mx-5">Author: Asan Asanov</p>
+                <p class="small text-muted mx-5"> Date of Publish: 16.12.2022 20:03</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="AnswerForm" class="float-start border border-dark bg-white rounded w-75" style="display: none; height: auto; margin: 10px 50px; padding: 10px;">
+        <div class="m-3 w-auto">
+            <label for="AnswerDescription" class="form-label">Answer Description:</label>
+            <textarea class="form-control" rows="10" id="AnswerDescription"></textarea>
+        </div>
+        <button type="submit" class="btn btn-danger w-25 mx-3 float-end">Send</button>
+    </div>
+
+
+    <div class="d-flex flex-column float-start mx-5 w-75">
+        <h5 class="m-0">Answers:</h5>
+        <hr>
+    </div>
+
+    <div class="float-start border border-dark bg-white rounded w-75" style="height: auto; margin: 10px 50px; padding: 10px;">
+        <p>Answer Description
+            <br>
+            ...
+            <br>
+            ...
+            <br>
+            ...
+            <br>
+            ...
+        </p>
+        <hr>
+        <div class="d-flex flex-row justify-content-between">
+            <div class="d-flex flex-row justify-content-between">
+                <p class="small text-muted mx-5">Author: Asan Asanov</p>
+                <p class="small text-muted mx-5"> Date of Publish: 16.12.2022 20:03</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="float-start border border-dark bg-white rounded w-75" style="height: auto; margin: 10px 50px; padding: 10px;">
+        <p>Answer Description
+            <br>
+            ...
+            <br>
+            ...
+            <br>
+            ...
+            <br>
+            ...
+        </p>
+        <hr>
+        <div class="d-flex flex-row justify-content-between">
+            <div class="d-flex flex-row justify-content-between">
+                <p class="small text-muted mx-5">Author: Asan Asanov</p>
+                <p class="small text-muted mx-5"> Date of Publish: 16.12.2022 20:03</p>
+            </div>
+        </div>
+    </div>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        function ToggleForm(){
+            var x = document.getElementById("AnswerForm");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
