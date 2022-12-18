@@ -48,22 +48,24 @@
           <a class="nav-link" href="#">My Profile</a>
         </li>
     </nav>
+    @using (Html.BeginForm("AddQuestion", "Home", FormMethod.Post))
+    {
+        <div id="QuestionForm" style="display: none">
+            <div class="d-flex flex-column justify-content-around">
+                <div class="m-3 w-75">
+                    <label for="QuestionTitle" class="form-label">Question Title:</label>
+                    <textarea name="questionTitle" class="form-control" rows="2" id="QuestionTitle"></textarea>
+                </div>
 
-    <div id="QuestionForm" style="display: none">
-    <div class="d-flex flex-column justify-content-around" >
-        <div class="m-3 w-75">
-            <label for="QuestionTitle" class="form-label">Question Title:</label>
-            <textarea class="form-control" rows="2" id="QuestionTitle"></textarea>
+                <div class="m-3 w-75">
+                    <label for="QuestionDescription" class="form-label">Question Description:</label>
+                    <textarea name="questionDescription" class="form-control" rows="10" id="QuestionDescription"></textarea>
+                </div>
+                <button type="submit" asp-action="AddQuestion" class="btn btn-primary w-25 m-3">Post it</button>
+                <hr>
+            </div>
         </div>
-    
-        <div class="m-3 w-75">
-            <label for="QuestionDescription" class="form-label">Question Description:</label>
-            <textarea class="form-control" rows="10" id="QuestionDescription"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary w-25 m-3">Post it</button>
-        <hr>
-    </div>
-    </div>  
+    }
 @foreach (var item in Model)
 {
     <div class="card m-2 px-3 border border-dark">

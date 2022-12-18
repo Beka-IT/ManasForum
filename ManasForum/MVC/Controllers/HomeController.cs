@@ -21,7 +21,7 @@ namespace MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var username = HttpContext.Session.GetString(_configuration.GetSection("UserSessionKey").ToString());
+            var username = HttpContext.Session.GetString(_configuration.GetSection("UsernameSessionKey").ToString());
                 
             if (username == null)
             {
@@ -45,6 +45,34 @@ namespace MVC.Controllers
                 
                 return View();
             } 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddQuestion(string questionTitle, string questionDescription)
+        {
+            var userId = HttpContext.Session.GetString(_configuration.GetSection("UserIdSessionKey").ToString());
+
+            var publicationDate = DateTime.Today;
+
+            var newQuestion = new Question()
+            {
+                Title = questionTitle,
+                Description = questionDescription,
+                AuthorId = Convert.ToInt32(userId),
+                PublicationDate = publicationDate
+            };
+            
+            using (var client = new HttpClient())
+            { 
+                string actionName = $"AddQuestion";
+                
+                client.BaseAddress = new Uri(BaseAddress + actionName);
+
+                HttpResponseMessage result = client.PostAsJsonAsync(actionName, newQuestion).Result;
+
+            } 
+            
+            return RedirectToAction("Index");
         }
     }
 }

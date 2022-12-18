@@ -17,16 +17,11 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("Login")]
-    public async Task<IActionResult> Login(AccountDto accountDto)
+    public async Task<Account> Login(AccountDto accountDto)
     {
         var user = await _accountService.LoginAsync(accountDto.Login, accountDto.Password);
-
-        if (user == null)
-        {
-            return Unauthorized();
-        }
-
-        return Ok();
+        
+        return user;
     }
 
     [HttpPost("SignUp")]

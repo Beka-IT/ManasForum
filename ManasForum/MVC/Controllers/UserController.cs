@@ -80,12 +80,15 @@ namespace MVC.Controllers
                 //HTTP POST
                 HttpResponseMessage result = client.PostAsJsonAsync(actionName, account).Result;
 
-                if (result.IsSuccessStatusCode)
+                var user = await result.Content.ReadAsAsync<Account>();
+                if (user != null)
                 {
-                    HttpContext.Session.SetString(_configuration.GetSection("UserSessionKey").ToString(), account.Login);
+                    HttpContext.Session.SetString(_configuration.GetSection("UsernameSessionKey").ToString(), user.Login);
+                    string userIdAsString = user.Id.ToString();
+                    HttpContext.Session.SetString(_configuration.GetSection("UserIdSessionKey").ToString(), userIdAsString); 
                     return RedirectToAction("Index", "Home");
                 }
-                
+
                 TempData["LoginError"] = "Неправильный логин или пароль!";
                 
                 return RedirectToAction("Login");
@@ -95,7 +98,7 @@ namespace MVC.Controllers
         [HttpGet("LogOut")]
         public IActionResult LogOut()
         {
-            HttpContext.Session.Remove(_configuration.GetSection("UserSessionKey").ToString());
+            HttpContext.Session.Remove(_configuration.GetSection("UsernameSessionKey").ToString());
 
             return RedirectToAction("Login", "User");
         }

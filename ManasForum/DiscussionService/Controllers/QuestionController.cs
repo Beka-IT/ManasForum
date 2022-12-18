@@ -43,4 +43,20 @@ public class QuestionController : ControllerBase
         
         return result;
     }
+
+    [HttpPost("AddQuestion")]
+    public async Task<IActionResult> AddQuestion(Question newQuestion)
+    {
+        if (newQuestion.PublicationDate == null || newQuestion.Title == null || newQuestion.Description == null ||
+            newQuestion.AuthorId == null)
+        {
+            return BadRequest();
+        }
+        
+        await _context.Questions.AddAsync(newQuestion);
+        
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
 }
