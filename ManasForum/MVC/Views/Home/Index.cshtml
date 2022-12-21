@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model IEnumerable<DiscussionService.ViewModels.PopularQuestionsViewModel>
+@model IEnumerable<DiscussionService.ViewModels.QuestionsViewModel>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 <html lang="en">
@@ -74,7 +74,7 @@
 {
     <div class="card m-2 px-3 border border-dark">
         <div class="card-body">
-            <h5 class="card-title">@item.Question.Title</h5>
+            <h5 class="card-title"><a asp-action="QuestionPage" asp-route-id="@item.Question.Id">@item.Question.Title</a></h5>
             <hr>
             <p class="card-text">@item.Question.Description</p>
             <hr>

@@ -2,6 +2,7 @@ using DiscussionService.Data;
 using DiscussionService.Models;
 using DiscussionService.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using UserService.Models;
 
 namespace DiscussionService.Controllers;
@@ -19,9 +20,9 @@ public class QuestionController : ControllerBase
     }
 
     [HttpGet("PopularQuestions")]
-    public IEnumerable<PopularQuestionsViewModel> GetPopularQuestions()
+    public IEnumerable<QuestionsViewModel> GetPopularQuestions()
     {
-        var result = new List<PopularQuestionsViewModel>();
+        var result = new List<QuestionsViewModel>();
         var questions =  _context.Questions
             .OrderByDescending(q => q.Id)
             .Take(6);
@@ -33,7 +34,7 @@ public class QuestionController : ControllerBase
             int answersCount = _context.Answers.Where(a => a.QuestionId == question.Id).Count();
             
             result.Add(
-                new PopularQuestionsViewModel()
+                new QuestionsViewModel()
                 {
                     Question = question,
                     AnswersCount = answersCount,
@@ -61,12 +62,12 @@ public class QuestionController : ControllerBase
     }
 
     [HttpGet("FindQuestions")]
-    public IEnumerable<PopularQuestionsViewModel> FindQuestions(string title)
+    public IEnumerable<QuestionsViewModel> FindQuestions(string title)
     {
-        var result = new List<PopularQuestionsViewModel>();
+        var result = new List<QuestionsViewModel>();
         
         var questions = _context.Questions.ToList()
-            .Where(q => q.Title.ToLower().Contains(title.ToLower()))
+            .Where(q => q.Title.ToLower().Contains(title.ToLower()) || q.Description.ToLower().Contains(title.ToLower()))
             .Take(6);
         
         foreach (var question in questions)
@@ -76,7 +77,7 @@ public class QuestionController : ControllerBase
             int answersCount = _context.Answers.Where(a => a.QuestionId == question.Id).Count();
             
             result.Add(
-                new PopularQuestionsViewModel()
+                new QuestionsViewModel()
                 {
                     Question = question,
                     AnswersCount = answersCount,
@@ -85,5 +86,34 @@ public class QuestionController : ControllerBase
         }
         
         return result;
+    }
+    
+    [HttpGet("GetQuestion")]
+    public QuestionPageViewModel GetQuestion(int id)
+    {
+        var result = new QuestionPageViewModel();
+
+        result.Question = _context.Questions.FirstOrDefault(q => q.Id == id);
+        
+        result.AuthorFullname = _context.Accounts.FirstOrDefault(a => a.Id == result.Question.AuthorId).Fullname;
+
+        result.Answers = GetAnswers(id);
+        
+        return result;
+    }
+
+    private IEnumerable<AnswerViewModel> GetAnswers(int id)
+    {
+        var answers = new List<AnswerViewModel>();
+        
+        _context.Answers.Where(a => a.QuestionId == id).ForEachAsync(ans =>
+        {
+            var newAnswerViewModel = new AnswerViewModel();
+            newAnswerViewModel.Answer = ans;
+            newAnswerViewModel.AuthorFullname = _context.Accounts.FirstOrDefault(a => a.Id == ans.AuthorId).Fullname;
+            answers.Add(newAnswerViewModel);
+        });
+        
+        return answers;
     }
 }

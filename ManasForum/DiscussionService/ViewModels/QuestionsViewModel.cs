@@ -2,7 +2,7 @@ using DiscussionService.Models;
 
 namespace DiscussionService.ViewModels;
 
-public class PopularQuestionsViewModel
+public class QuestionsViewModel
 {
     public Question Question { get; set; }
     public int AnswersCount { get; set; }

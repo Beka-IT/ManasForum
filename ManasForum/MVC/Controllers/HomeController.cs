@@ -38,7 +38,7 @@ namespace MVC.Controllers
 
                 if (result.IsSuccessStatusCode)
                 {
-                    var questions = await result.Content.ReadAsAsync<IEnumerable<PopularQuestionsViewModel>>();
+                    var questions = await result.Content.ReadAsAsync<IEnumerable<QuestionsViewModel>>();
                     
                     return View(questions);
                 }
@@ -88,19 +88,38 @@ namespace MVC.Controllers
                 
                 if (result.IsSuccessStatusCode)
                 {
-                    var questions = await result.Content.ReadAsAsync<IEnumerable<PopularQuestionsViewModel>>();
+                    var questions = await result.Content.ReadAsAsync<IEnumerable<QuestionsViewModel>>();
                     
                     return View("Index", questions);
                 }
 
             } 
-            return View("Index", new List<PopularQuestionsViewModel>());
+            
+            return View("Index", new List<QuestionsViewModel>());
         }
 
-        [HttpGet("Question")]
-        public IActionResult QuestionPage(int id)
+        [HttpGet]
+        [Route("Question/{id:int}")]
+        public async Task<IActionResult> QuestionPage(int id)
         {
-            return View();
+            using (var client = new HttpClient())
+            { 
+                string actionName = $"GetQuestion?id={id}";
+                
+                client.BaseAddress = new Uri(BaseAddress + actionName);
+
+                HttpResponseMessage result = client.GetAsync(actionName).Result;
+                
+                if (result.IsSuccessStatusCode)
+                {
+                    var question = await result.Content.ReadAsAsync<QuestionPageViewModel>();
+                    
+                    return View("QuestionPage", question);
+                }
+
+            } 
+            
+            return View(new QuestionPageViewModel());
         }
     }
 }
