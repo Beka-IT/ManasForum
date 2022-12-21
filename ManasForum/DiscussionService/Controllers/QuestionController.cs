@@ -100,11 +100,17 @@ public class QuestionController : ControllerBase
     }
     
     [HttpGet("GetQuestion")]
-    public async Task<QuestionPageViewModel> GetQuestion(int id)
+    public async Task<QuestionPageViewModel> GetQuestion(int id, int userId)
     {
         var result = new QuestionPageViewModel();
 
         result.Question = _context.Questions.FirstOrDefault(q => q.Id == id);
+
+        if (result.Question.AuthorId != userId)
+        {
+            result.Question.Views++;
+            await _context.SaveChangesAsync();
+        }
         
         result.AuthorFullname = _context.Accounts.FirstOrDefault(a => a.Id == result.Question.AuthorId).Fullname;
 

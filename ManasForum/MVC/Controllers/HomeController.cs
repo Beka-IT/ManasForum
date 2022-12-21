@@ -105,7 +105,8 @@ namespace MVC.Controllers
         {
             using (var client = new HttpClient())
             { 
-                string actionName = $"GetQuestion?id={id}";
+                string userId = HttpContext.Session.GetString(_configuration.GetSection("UserIdSessionKey").ToString());
+                string actionName = $"GetQuestion?id={id}&userId={userId}";
                 
                 client.BaseAddress = new Uri(BaseAddress + actionName);
 
