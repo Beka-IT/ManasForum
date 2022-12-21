@@ -48,6 +48,13 @@ namespace MVC.Controllers
             } 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Members()
+        {
+            return View();
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> AddQuestion(string questionTitle, string questionDescription)
         {
