@@ -74,5 +74,33 @@ namespace MVC.Controllers
             
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> FindQuestions(string title)
+        {
+            using (var client = new HttpClient())
+            { 
+                string actionName = $"FindQuestions?title={title}";
+                
+                client.BaseAddress = new Uri(BaseAddress + actionName);
+
+                HttpResponseMessage result = client.GetAsync(actionName).Result;
+                
+                if (result.IsSuccessStatusCode)
+                {
+                    var questions = await result.Content.ReadAsAsync<IEnumerable<PopularQuestionsViewModel>>();
+                    
+                    return View("Index", questions);
+                }
+
+            } 
+            return View("Index", new List<PopularQuestionsViewModel>());
+        }
+
+        [HttpGet("Question")]
+        public IActionResult QuestionPage(int id)
+        {
+            return View();
+        }
     }
 }

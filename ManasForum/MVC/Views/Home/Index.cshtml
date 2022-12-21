@@ -14,24 +14,28 @@
     <nav class="nav bg-dark bg-gradient sticky-top">
         <div class="p-2 mx-3">
             <h1 class="text-info text-end">ManasForum</h1>
-        </div>
-        
-        <div class="d-flex align-items-end w-50 mx-auto" >
-            <div class="input-group m-1 mx-5 w-100">
-                <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="button-addon2">
-                <button class="btn btn-primary" type="button" id="button-addon2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                    </svg>
-                </button>
+        </div>  
+        @using (Html.BeginForm("FindQuestions", "Home", FormMethod.Post))
+        {
+            <div style="display: flex; margin-top: 10px;">
+                <div class="d-flex align-items-end w-50 mx-auto" >
+                    <div class="input-group m-1 mx-5 w-100">
+                        
+                        <input type="text" class="form-control" placeholder="Search" name="title" aria-label="Search" aria-describedby="button-addon2">
+                        <button class="btn btn-primary" type="submit" asp-action="FindQuestions" id="button-addon2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                  <div class="d-flex align-items-end flex-row-reverse">
+                      <a class="btn btn-outline-warning m-1" role="button" asp-controller="User" asp-action="LogOut">Log out</a>
+                      <a class="btn btn-outline-success m-1 fw-bold" onclick="ToggleForm()" role="button">Ask a question</a>
+                  </div>
             </div>
-        </div>
-
-        <div class="d-flex align-items-end flex-row-reverse">
-            <a class="btn btn-outline-warning m-1" role="button" asp-controller="User" asp-action="LogOut">Log out</a>
-            <a class="btn btn-outline-success m-1 fw-bold" onclick="ToggleForm()" role="button">Ask a question</a>
-        </div>
-
+        }
     </nav>
 
     <nav class="float-start nav align-items-center flex-column bg-dark bg-gradient me-1" style="width: 15%; height: 2000px;">

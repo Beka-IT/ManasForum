@@ -23,7 +23,7 @@ public class QuestionController : ControllerBase
     {
         var result = new List<PopularQuestionsViewModel>();
         var questions =  _context.Questions
-            .OrderByDescending(q => q.Views)
+            .OrderByDescending(q => q.Id)
             .Take(6);
 
         foreach (var question in questions)
@@ -58,5 +58,32 @@ public class QuestionController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok();
+    }
+
+    [HttpGet("FindQuestions")]
+    public IEnumerable<PopularQuestionsViewModel> FindQuestions(string title)
+    {
+        var result = new List<PopularQuestionsViewModel>();
+        
+        var questions = _context.Questions.ToList()
+            .Where(q => q.Title.ToLower().Contains(title.ToLower()))
+            .Take(6);
+        
+        foreach (var question in questions)
+        {
+            string authorFullname = _context.Accounts.FirstOrDefault(a => a.Id == question.AuthorId).Fullname;
+            
+            int answersCount = _context.Answers.Where(a => a.QuestionId == question.Id).Count();
+            
+            result.Add(
+                new PopularQuestionsViewModel()
+                {
+                    Question = question,
+                    AnswersCount = answersCount,
+                    AuthorFullname = authorFullname
+                });
+        }
+        
+        return result;
     }
 }
