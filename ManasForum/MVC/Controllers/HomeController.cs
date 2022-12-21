@@ -3,6 +3,7 @@ using MVC.Models;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using DiscussionService.Migrations;
 using DiscussionService.Models;
 using DiscussionService.ViewModels;
 using Grpc.Net.Client;
@@ -100,7 +101,7 @@ namespace MVC.Controllers
 
         [HttpGet]
         [Route("Question/{id:int}")]
-        public async Task<IActionResult> QuestionPage(int id)
+        public async Task<IActionResult> Question(int id)
         {
             using (var client = new HttpClient())
             { 
@@ -114,12 +115,36 @@ namespace MVC.Controllers
                 {
                     var question = await result.Content.ReadAsAsync<QuestionPageViewModel>();
                     
-                    return View("QuestionPage", question);
+                    return View("Question", question);
                 }
 
             } 
             
             return View(new QuestionPageViewModel());
+        }
+        
+        [HttpPost("AddAnswer")]
+        public IActionResult AddAnswer(int questionId, string description)
+        {
+            string userId = HttpContext.Session.GetString(_configuration.GetSection("UserIdSessionKey").ToString());
+            
+            var answer = new Answer()
+            {
+                AuthorId = Convert.ToInt32(userId),
+                QuestionId = questionId,
+                Description = description
+            };
+            
+            using (var client = new HttpClient())
+            { 
+                string actionName = $"Answer";
+                
+                client.BaseAddress = new Uri(BaseAddress + actionName);
+
+                HttpResponseMessage result = client.PostAsJsonAsync(actionName, answer).Result;
+            }
+
+            return Redirect($"/Question/{questionId}");
         }
     }
 }

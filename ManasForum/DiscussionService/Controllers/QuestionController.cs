@@ -87,9 +87,20 @@ public class QuestionController : ControllerBase
         
         return result;
     }
+
+    [HttpPost("Answer")]
+    public async Task AddAnswer(Answer newAnswer)
+    {
+        if (newAnswer != null)
+        {
+            newAnswer.PublicationDate = DateTime.Today;
+            await _context.AddAsync(newAnswer);
+            await _context.SaveChangesAsync();
+        }
+    }
     
     [HttpGet("GetQuestion")]
-    public QuestionPageViewModel GetQuestion(int id)
+    public async Task<QuestionPageViewModel> GetQuestion(int id)
     {
         var result = new QuestionPageViewModel();
 
@@ -97,20 +108,20 @@ public class QuestionController : ControllerBase
         
         result.AuthorFullname = _context.Accounts.FirstOrDefault(a => a.Id == result.Question.AuthorId).Fullname;
 
-        result.Answers = GetAnswers(id);
+        result.Answers = await GetAnswers(id);
         
         return result;
     }
 
-    private IEnumerable<AnswerViewModel> GetAnswers(int id)
+    private async Task<IEnumerable<AnswerViewModel>> GetAnswers(int id)
     {
         var answers = new List<AnswerViewModel>();
         
-        _context.Answers.Where(a => a.QuestionId == id).ForEachAsync(ans =>
+        await _context.Answers.Where(a => a.QuestionId == id).ForEachAsync(ans =>
         {
             var newAnswerViewModel = new AnswerViewModel();
             newAnswerViewModel.Answer = ans;
-            newAnswerViewModel.AuthorFullname = _context.Accounts.FirstOrDefault(a => a.Id == ans.AuthorId).Fullname;
+            newAnswerViewModel.AuthorFullname = _context.Accounts.FirstOrDefault(a => a.Id == ans.AuthorId)?.Fullname;
             answers.Add(newAnswerViewModel);
         });
         
