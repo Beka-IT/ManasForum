@@ -98,7 +98,34 @@ public class QuestionController : ControllerBase
             await _context.SaveChangesAsync();
         }
     }
-    
+
+    [HttpGet("GetQuestionsByAuthorId")]
+    public IEnumerable<QuestionsViewModel> GetQuestionsByAuthorId(int authorId)
+    {
+        var result = new List<QuestionsViewModel>();
+        
+        var questions = _context.Questions.ToList()
+            .Where(q => q.AuthorId == authorId)
+            .Take(6);
+        
+        foreach (var question in questions)
+        {
+            string authorFullname = _context.Accounts.FirstOrDefault(a => a.Id == question.AuthorId).Fullname;
+            
+            int answersCount = _context.Answers.Where(a => a.QuestionId == question.Id).Count();
+            
+            result.Add(
+                new QuestionsViewModel()
+                {
+                    Question = question,
+                    AnswersCount = answersCount,
+                    AuthorFullname = authorFullname
+                });
+        }
+        
+        return result;
+    }
+
     [HttpGet("GetQuestion")]
     public async Task<QuestionPageViewModel> GetQuestion(int id, int userId)
     {

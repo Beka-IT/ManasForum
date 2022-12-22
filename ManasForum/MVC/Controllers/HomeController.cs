@@ -105,6 +105,31 @@ namespace MVC.Controllers
             
             return View("Index", new List<QuestionsViewModel>());
         }
+        
+        [HttpGet("MyQuestions")]
+        public async Task<IActionResult> MyQuestions()
+        {
+            var authorId = HttpContext.Session.GetString(_configuration.GetSection("UserIdSessionKey").ToString());
+            
+            using (var client = new HttpClient())
+            { 
+                string actionName = $"GetQuestionsByAuthorId?authorId={authorId}";
+                
+                client.BaseAddress = new Uri(BaseAddress + actionName);
+
+                HttpResponseMessage result = client.GetAsync(actionName).Result;
+                
+                if (result.IsSuccessStatusCode)
+                {
+                    var questions = await result.Content.ReadAsAsync<IEnumerable<QuestionsViewModel>>();
+                    
+                    return View("Index", questions);
+                }
+
+            } 
+            
+            return View("Index", new List<QuestionsViewModel>());
+        }
 
         [HttpGet]
         [Route("Question/{id:int}")]
