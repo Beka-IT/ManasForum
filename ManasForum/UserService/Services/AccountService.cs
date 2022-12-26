@@ -64,7 +64,10 @@ public class AccountService : IAccountService
         var newAccount = new Account()
             {
                 Login = account.Login,
-                Fullname = account.Fullname
+                Fullname = account.Fullname,
+                Role = account.Role,
+                Department = account.Department,
+                Years = account.Years
             };
         
         newAccount.Password = BCrypt.Net.BCrypt.HashPassword(account.Password);

@@ -27,6 +27,18 @@
 
                 </div>
                 <div class="form-floating-sm mb-3">
+                    @Html.TextBoxFor(m => m.Role, new {placeholder = "Статус(Преподователь/Студент/Персонал)", id = "role", @class = "form-control" })
+
+                </div>
+                <div class="form-floating-sm mb-3">
+                    @Html.TextBoxFor(m => m.Department, new {placeholder = "Отдел", id = "department", @class = "form-control" })
+
+                </div>
+                <div class="form-floating-sm mb-3">
+                    @Html.TextBoxFor(m => m.Years, new {placeholder = "Курс/Стаж", id = "years", @class = "form-control" })
+
+                </div>
+                <div class="form-floating-sm mb-3">
                     @Html.PasswordFor(m => m.Password,new { placeholder = "Пароль", id = "txtPassword", @class = "form-control" })
                 </div>
                 <div class="form-floating-sm mb-3">
@@ -54,6 +66,22 @@
                 var fullname = $("#fullname").val();
                 if (fullname == ""){
                     $('#validationError').text("Введите ФИО!");
+                    return false;
+                }
+                
+                var role = $("#role").val();
+                var department = $("#department").val();
+                var years = $("#years").val();
+                if (role == "") {
+                    $('#validationError').text("Введите свой статус!");
+                    return false;
+                }
+                if (department == "") {
+                    $('#validationError').text("Введите свой отдел!");
+                    return false;
+                }
+                if (years == "") {
+                    $('#validationError').text("Введите курс/стаж в универе!");
                     return false;
                 }
 

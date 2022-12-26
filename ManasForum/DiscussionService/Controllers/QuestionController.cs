@@ -29,7 +29,7 @@ public class QuestionController : ControllerBase
 
         foreach (var question in questions)
         {
-            string authorFullname = _context.Accounts.FirstOrDefault(a => a.Id == question.AuthorId).Fullname;
+            var author = _context.Accounts.FirstOrDefault(a => a.Id == question.AuthorId);
             
             int answersCount = _context.Answers.Where(a => a.QuestionId == question.Id).Count();
             
@@ -38,7 +38,7 @@ public class QuestionController : ControllerBase
                 {
                     Question = question,
                     AnswersCount = answersCount,
-                    AuthorFullname = authorFullname
+                    Author = author
                 });
         }
         
@@ -72,7 +72,7 @@ public class QuestionController : ControllerBase
         
         foreach (var question in questions)
         {
-            string authorFullname = _context.Accounts.FirstOrDefault(a => a.Id == question.AuthorId).Fullname;
+            var author = _context.Accounts.FirstOrDefault(a => a.Id == question.AuthorId);
             
             int answersCount = _context.Answers.Where(a => a.QuestionId == question.Id).Count();
             
@@ -81,7 +81,7 @@ public class QuestionController : ControllerBase
                 {
                     Question = question,
                     AnswersCount = answersCount,
-                    AuthorFullname = authorFullname
+                    Author = author
                 });
         }
         
@@ -110,7 +110,7 @@ public class QuestionController : ControllerBase
         
         foreach (var question in questions)
         {
-            string authorFullname = _context.Accounts.FirstOrDefault(a => a.Id == question.AuthorId).Fullname;
+            var author = _context.Accounts.FirstOrDefault(a => a.Id == question.AuthorId);
             
             int answersCount = _context.Answers.Where(a => a.QuestionId == question.Id).Count();
             
@@ -119,7 +119,7 @@ public class QuestionController : ControllerBase
                 {
                     Question = question,
                     AnswersCount = answersCount,
-                    AuthorFullname = authorFullname
+                    Author = author
                 });
         }
         
@@ -144,6 +144,33 @@ public class QuestionController : ControllerBase
         result.Answers = await GetAnswers(id);
         
         return result;
+    }
+    
+
+    [HttpGet("GetAllMembers")]
+    public IEnumerable<AccountViewModel> GetAllMembers()
+    {
+        var accounts = _context.Accounts.ToList();
+        var questions = _context.Questions.ToList();
+        var answers = _context.Answers.ToList();
+
+        var accountResult = new List<AccountViewModel>();
+
+        foreach (var account in accounts)
+        {
+            accountResult.Add(
+                new AccountViewModel()
+                {
+                    Account = account,
+                    AnswersCount = answers.Where(a => a.AuthorId == account.Id).Count(),
+                    QuestionCounts = answers.Where(a=> a.AuthorId == account.Id).Count(),
+                }
+            );
+            accountResult[accountResult.Count - 1].Activity = accountResult[accountResult.Count - 1].AnswersCount * 2 +
+                                                              accountResult[accountResult.Count - 1].QuestionCounts;
+        }
+        
+        return accountResult;
     }
 
     private async Task<IEnumerable<AnswerViewModel>> GetAnswers(int id)

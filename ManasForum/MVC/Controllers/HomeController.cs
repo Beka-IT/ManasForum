@@ -7,6 +7,7 @@ using DiscussionService.Migrations;
 using DiscussionService.Models;
 using DiscussionService.ViewModels;
 using Grpc.Net.Client;
+using UserService.Models;
 
 namespace MVC.Controllers
 {
@@ -51,7 +52,24 @@ namespace MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Members()
         {
-            return View();
+            using (var client = new HttpClient())
+            { 
+                string actionName = $"GetAllMembers";
+                
+                client.BaseAddress = new Uri(BaseAddress + actionName);
+
+                HttpResponseMessage result = client.GetAsync(actionName).Result;
+                
+                if (result.IsSuccessStatusCode)
+                {
+                    var accounts = await result.Content.ReadAsAsync<IEnumerable<AccountViewModel>>();
+                    
+                    return View("Members", accounts);
+                }
+                
+                return View("Members", new List<AccountViewModel>());
+
+            }
         }
 
 

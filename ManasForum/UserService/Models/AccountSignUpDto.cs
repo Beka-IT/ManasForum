@@ -15,4 +15,10 @@ public class AccountSignUpDto
     
     [Required(ErrorMessage = "Введите ФИО!")]
     public string Fullname { get; set; }
+    [Required(ErrorMessage = "Введите статус(Преподователь/Студент/Персонал)!")]
+    public string? Role { get; set; }
+    [Required(ErrorMessage = "Введите свой отдел!")]
+    public string? Department { get; set; }
+    [Required(ErrorMessage = "Введите свой курс/стаж!")]
+    public int? Years { get; set; }
 }

@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<UserService.Models.AccountViewModel>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,36 +68,19 @@
             </tr>
         </thead>
         <tbody>
+        @foreach (var item in Model)
+        {
             <tr>
-                <th class="table-info" scope="row">1</th>
-                <th class="table-info" scope="col">Asan Asanov</th>
-                <th class="table-info" scope="col">Student</th>
-                <th class="table-info" scope="col">Computer Science</th>
-                <th class="table-info" scope="col">2-year</th>
-                <th class="table-success" scope="col">12</th>
-                <th class="table-danger" scope="col">21</th>
-                <th class="table-primary" scope="col">12*2+21=45</th>
+                <th class="table-info" scope="row">@item.Account.Id</th>
+                <th class="table-info" scope="col">@item.Account.Fullname</th>
+                <th class="table-info" scope="col">@item.Account.Role</th>
+                <th class="table-info" scope="col">@item.Account.Department</th>
+                <th class="table-info" scope="col">@item.Account.Years-year</th>
+                <th class="table-success" scope="col">@item.AnswersCount</th>
+                <th class="table-danger" scope="col">@item.QuestionCounts</th>
+                <th class="table-primary" scope="col">@item.Activity</th>
             </tr>
-            <tr>
-                <th class="table-info" scope="row">2</th>
-                <th class="table-info" scope="col">Asan Asanov</th>
-                <th class="table-info" scope="col">Student</th>
-                <th class="table-info" scope="col">Computer Science</th>
-                <th class="table-info" scope="col">2-year</th>
-                <th class="table-success" scope="col">12</th>
-                <th class="table-danger" scope="col">21</th>
-                <th class="table-primary" scope="col">12*2+21=45</th>
-            </tr>
-            <tr>
-                <th class="table-info" scope="row">3</th>
-                <th class="table-info" scope="col">Asan Asanov</th>
-                <th class="table-info" scope="col">Student</th>
-                <th class="table-info" scope="col">Computer Science</th>
-                <th class="table-info" scope="col">2-year</th>
-                <th class="table-success" scope="col">12</th>
-                <th class="table-danger" scope="col">21</th>
-                <th class="table-primary" scope="col">12*2+21=45</th>
-            </tr>
+        }
         </tbody>
     </table>
 
