@@ -127,11 +127,11 @@ public class QuestionController : ControllerBase
     }
 
     [HttpGet("GetQuestion")]
-    public async Task<QuestionPageViewModel> GetQuestion(int id, int userId)
+    public async Task<QuestionPageViewModel> GetQuestion(int questionId, int userId)
     {
         var result = new QuestionPageViewModel();
 
-        result.Question = _context.Questions.FirstOrDefault(q => q.Id == id);
+        result.Question = _context.Questions.FirstOrDefault(q => q.Id == questionId);
 
         if (result.Question.AuthorId != userId)
         {
@@ -141,7 +141,7 @@ public class QuestionController : ControllerBase
         
         result.AuthorFullname = _context.Accounts.FirstOrDefault(a => a.Id == result.Question.AuthorId).Fullname;
 
-        result.Answers = await GetAnswers(id);
+        result.Answers = await GetAnswers(questionId);
         
         return result;
     }
@@ -156,19 +156,17 @@ public class QuestionController : ControllerBase
 
         var accountResult = new List<AccountViewModel>();
 
-        foreach (var account in accounts)
+        accounts.ForEach(acc =>
         {
-            accountResult.Add(
-                new AccountViewModel()
-                {
-                    Account = account,
-                    AnswersCount = answers.Where(a => a.AuthorId == account.Id).Count(),
-                    QuestionCounts = answers.Where(a=> a.AuthorId == account.Id).Count(),
-                }
-            );
-            accountResult[accountResult.Count - 1].Activity = accountResult[accountResult.Count - 1].AnswersCount * 2 +
-                                                              accountResult[accountResult.Count - 1].QuestionCounts;
-        }
+            var accountViewModel = new AccountViewModel()
+            {
+                    Account = acc,
+                    AnswersCount = answers.Where(a => a.AuthorId == acc.Id).Count(),
+                    QuestionCounts = questions.Where(a=> a.AuthorId == acc.Id).Count(),
+            };
+            accountViewModel.Activity = GetAccountActivity(accountViewModel);
+            accountResult.Add(accountViewModel);
+        });
         
         return accountResult;
     }
@@ -186,5 +184,10 @@ public class QuestionController : ControllerBase
         });
         
         return answers;
+    }
+
+    private int GetAccountActivity(AccountViewModel accountViewModel)
+    {
+        return accountViewModel.AnswersCount * 2 + accountViewModel.QuestionCounts;
     }
 }
